@@ -1,0 +1,17 @@
+{
+    "extends": "airbnb-base",
+    "plugins": ["jest"],
+    "rules": {
+      "no-restricted-syntax": ["error", "LabeledStatement", "WithStatement"],
+      "import/newline-after-import": ["error", { "count": 2 }],
+      "padding-line-between-statements": [
+        "error",
+        { "blankLine": "always", "prev": "*", "next": "cjs-export" }
+      ]
+    },
+    "env": {
+      "jest/globals": true,
+      "node": true
+    }
+  }
+  
