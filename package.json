@@ -1,0 +1,14 @@
+{
+  "name": "oryx",
+  "version": "0.0.1",
+  "description": "A minimal framework for creating RESTful microservices",
+  "main": "lib",
+  "scripts": {
+    "jest": "jest --config=test/jest.config.json --env=node -i --watch",
+    "test": "npm run jest"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^24.8.0"
+  }
+}
