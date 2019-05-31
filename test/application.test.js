@@ -1,3 +1,4 @@
+const EventEmitter = require('events');
 const Oryx = require('../lib');
 
 
@@ -30,6 +31,13 @@ describe('Oryx application', () => {
 
       appWithLogger.log('custom logger works');
       expect(customLogger.log).toBeCalledWith('custom logger works');
+    });
+  });
+
+
+  describe('Event Emitter', () => {
+    test('should be an instance of EventEmitter', async () => {
+      expect(this.app).toBeInstanceOf(EventEmitter);
     });
   });
 });
