@@ -86,4 +86,48 @@ describe('Oryx application', () => {
       expect(this.app.service('test')).toBe(testService);
     });
   });
+
+
+  test('should wait for all services to start on app.start()', async () => {
+    const fn = jest.fn();
+
+    class TestService extends Oryx.Service {
+      async start() {
+        fn('test service started');
+      }
+    }
+
+    class TestService2 extends Oryx.Service {
+      start() {
+        return new Promise(resolve => setTimeout(() => {
+          fn('test service 2 started');
+          resolve();
+        }, 100));
+      }
+    }
+
+    this.app.load('test', new TestService());
+    this.app.load('test2', new TestService2());
+
+    await this.app.start();
+
+    expect(fn).toBeCalledTimes(2);
+    expect(fn).toBeCalledWith('test service started');
+    expect(fn).toBeCalledWith('test service 2 started');
+  });
+
+  test('should not start if any service throws an error', async () => {
+    class TestService extends Oryx.Service {
+      async start() {
+        throw new Error('Failed to start');
+      }
+    }
+
+    try {
+      this.app.load('test', new TestService());
+      await this.app.start();
+    } catch (e) {
+      expect(e.message).toEqual('Failed to start');
+    }
+  });
 });
