@@ -1,22 +1,10 @@
 {
-  "name": "oryx",
-  "version": "0.0.1",
-  "description": "A minimal framework for creating RESTful microservices",
-  "main": "lib",
+  "name": "root",
+  "private": true,
   "scripts": {
-    "test": "npm run lint && npm run jest",
-    "jest": "jest --config=test/jest.config.json --env=node -i",
-    "lint": "eslint lib/**/*.js"
+    "test": "lerna run test"
   },
-  "license": "MIT",
   "devDependencies": {
-    "jest": "^24.8.0",
-    "eslint": "^5.16.0",
-    "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.17.3",
-    "eslint-plugin-jest": "^22.6.4"
-  },
-  "dependencies": {
-    "koa-compose": "^4.1.0"
+    "lerna": "^3.14.1"
   }
 }
