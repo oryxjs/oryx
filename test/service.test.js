@@ -135,4 +135,16 @@ describe('Oryx service', () => {
     expect(fn).toHaveNthReturnedWith(3, { middleware: 'all', method: 'get' });
     expect(fn).toHaveBeenCalledTimes(3); // Ensure postMiddleware not called for get()
   });
+
+  test('should not call original method if context.response is set', async () => {
+    const middleware1 = async (context, next) => {
+      context.response = { value: 10 };
+      await next();
+    };
+
+    this.testService.use(middleware1);
+    const finalResult = await this.testService.get(100);
+
+    expect(finalResult).toStrictEqual({ value: 10 });
+  });
 });
