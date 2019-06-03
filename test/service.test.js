@@ -11,6 +11,10 @@ describe('Oryx service', () => {
       get(id) {
         return { value: id };
       }
+
+      post({ data }) {
+        return data;
+      }
     }
 
     this.testService = new TestService();
@@ -105,5 +109,30 @@ describe('Oryx service', () => {
     expect(fn).toHaveNthReturnedWith(1, { value: 100 }); // from middleware2
     expect(fn).toHaveNthReturnedWith(2, { value: 120 }); // from middleware1
     expect(finalResult).toStrictEqual({ value: 110 });
+  });
+
+  test('should run middleware registered for specific method', async () => {
+    const fn = jest.fn(a => ({ ...a }));
+
+    const middleware = async (context, next) => {
+      fn({ middleware: 'all', method: context.method });
+      await next();
+    };
+
+    const postMiddleware = async (context, next) => {
+      fn({ middleware: 'post', method: context.method });
+      await next();
+    };
+
+    this.testService.post.use(postMiddleware);
+    this.testService.use(middleware);
+
+    await this.testService.post({ value: 100 });
+    await this.testService.get({ value: 100 });
+
+    expect(fn).toHaveNthReturnedWith(1, { middleware: 'post', method: 'post' });
+    expect(fn).toHaveNthReturnedWith(2, { middleware: 'all', method: 'post' });
+    expect(fn).toHaveNthReturnedWith(3, { middleware: 'all', method: 'get' });
+    expect(fn).toHaveBeenCalledTimes(3); // Ensure postMiddleware not called for get()
   });
 });
