@@ -10,13 +10,17 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@oryx/oryx": "^1.0.0"
+    "koa-tree-router": "^0.4.6"
   },
   "devDependencies": {
-    "jest": "^24.8.0",
+    "@oryx/oryx": "^1.0.0",
+    "axios": "^0.19.0",
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.17.3",
-    "eslint-plugin-jest": "^22.6.4"
+    "eslint-plugin-jest": "^22.6.4",
+    "jest": "^24.8.0",
+    "koa": "^2.7.0",
+    "koa-bodyparser": "^4.2.1"
   }
 }
