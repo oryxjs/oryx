@@ -19,9 +19,14 @@ class Application extends EventEmitter {
     }
   }
 
-  load(name, service) {
+  service(name, service) {
     if (typeof name !== 'string') {
       throw new Error(`Invaid service name "${name}".`);
+    }
+
+    // If second param is not set, return the service
+    if (service === undefined) {
+      return this.services[name];
     }
 
     if (service instanceof Service === false) {
@@ -29,16 +34,13 @@ class Application extends EventEmitter {
     }
 
     if (this.services[name]) {
-      throw new Error(`A service with name "${name}" is already loaded.`);
+      throw new Error(`A service with name "${name}" already exists.`);
     }
 
     this.services[name] = service;
     return this.services[name];
   }
 
-  service(name) {
-    return this.services[name];
-  }
 
   async start() {
     for (const name of Object.keys(this.services)) {

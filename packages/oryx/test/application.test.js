@@ -48,20 +48,20 @@ describe('Oryx application', () => {
         start() { }
       }
 
-      this.app.load('test', new TestService());
+      this.app.service('test', new TestService());
       expect(this.app.service('test')).toBeInstanceOf(TestService);
     });
 
     test('should throw an error if service name already exists', async () => {
       expect(() => {
-        this.app.load('test', new Oryx.Service());
-        this.app.load('test', new Oryx.Service());
-      }).toThrow('A service with name "test" is already loaded.');
+        this.app.service('test', new Oryx.Service());
+        this.app.service('test', new Oryx.Service());
+      }).toThrow('A service with name "test" already exists.');
     });
 
     test('should throw an error if not an instance of Oryx.Service', async () => {
       expect(() => {
-        this.app.load('test', {});
+        this.app.service('test', {});
       }).toThrow('Service "test" is not an instance of Oryx.Service.');
     });
 
@@ -71,7 +71,7 @@ describe('Oryx application', () => {
       }
       const testService = new TestService();
 
-      const loadedService = this.app.load('test', testService);
+      const loadedService = this.app.service('test', testService);
       expect(loadedService).toBe(testService);
     });
 
@@ -81,7 +81,7 @@ describe('Oryx application', () => {
       }
       const testService = new TestService();
 
-      this.app.load('test', testService);
+      this.app.service('test', testService);
 
       expect(this.app.service('test')).toBe(testService);
     });
@@ -106,8 +106,8 @@ describe('Oryx application', () => {
       }
     }
 
-    this.app.load('test', new TestService());
-    this.app.load('test2', new TestService2());
+    this.app.service('test', new TestService());
+    this.app.service('test2', new TestService2());
 
     await this.app.start();
 
@@ -124,7 +124,7 @@ describe('Oryx application', () => {
     }
 
     try {
-      this.app.load('test', new TestService());
+      this.app.service('test', new TestService());
       await this.app.start();
     } catch (e) {
       expect(e.message).toEqual('Failed to start');
