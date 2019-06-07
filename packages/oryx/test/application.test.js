@@ -42,6 +42,14 @@ describe('Oryx application', () => {
   });
 
 
+  describe('Context', () => {
+    test('should be able to set and get items to app context', async () => {
+      this.app.set('version', 123);
+      expect(this.app.get('version')).toEqual(123);
+    });
+  });
+
+
   describe('Service', () => {
     test('should load service', async () => {
       class TestService extends Oryx.Service {

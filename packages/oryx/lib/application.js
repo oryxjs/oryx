@@ -1,5 +1,6 @@
 const EventEmitter = require('events');
 const Service = require('./service');
+const { attachMiddleware } = require('./utils');
 
 
 class Application extends EventEmitter {
@@ -17,6 +18,14 @@ class Application extends EventEmitter {
         this[method] = this.logger[method];
       }
     }
+  }
+
+  set(key, value) {
+    this.context[key] = value;
+  }
+
+  get(key) {
+    return this.context[key];
   }
 
   service(name, service) {
