@@ -138,4 +138,22 @@ describe('Oryx application', () => {
       expect(e.message).toEqual('Failed to start');
     }
   });
+
+  test('should be able to register middleware for start', async () => {
+    const fn = jest.fn();
+
+    const appMiddlware = async ({ app }, next) => {
+      fn(app);
+      app.set('hello', 'world');
+      await next();
+      fn(app.get('hello'));
+    };
+
+    this.app.start.use(appMiddlware);
+    await this.app.start();
+
+    expect(fn).toBeCalledTimes(2);
+    expect(fn).toBeCalledWith(this.app);
+    expect(fn).toBeCalledWith('world');
+  });
 });

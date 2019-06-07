@@ -18,6 +18,10 @@ class Application extends EventEmitter {
         this[method] = this.logger[method];
       }
     }
+
+    this.start.use = (middleware) => {
+      this.start = attachMiddleware(this.start, middleware, () => ({ app: this }));
+    };
   }
 
   set(key, value) {

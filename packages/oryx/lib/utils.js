@@ -4,9 +4,13 @@ const compose = require('koa-compose');
 const MIDDLEWARE = Symbol('@oryx/middleware');
 const ORIGINAL = Symbol('@oryx/method');
 
-function attachMiddleware(method, middleware) {
+function attachMiddleware(method, middleware, getContext) {
   if (typeof method !== 'function') {
     throw new Error(`Method parameter should be a function. Got ${method}`);
+  }
+
+  if (typeof getContext !== 'function') {
+    throw new Error(`getContext parameter should be a function. Got ${getContext}`);
   }
 
   const originalMethod = method[ORIGINAL] || method;
@@ -15,30 +19,13 @@ function attachMiddleware(method, middleware) {
 
   // Create new function with middleware wrapped
   async function methodWithMiddleware(...args) {
-    // Prepare context
-    const methodName = originalMethod.name;
-    const context = {
-      method: methodName,
-    };
-    let id;
-    let requestParams;
-    if (['get', 'put', 'patch', 'delete'].includes(methodName)) {
-      [id, requestParams] = args;
-    } else if (['post', 'getMany', 'putMany', 'patchMany', 'deleteMany'].includes(methodName)) {
-      [requestParams] = args;
-    }
-    const { body, query = {} } = requestParams || {};
-    Object.assign(context, {
-      id,
-      body,
-      query,
-    });
+    const context = getContext(originalMethod, args);
 
     // Create a middleware wrapper
     const originalMethodAsMiddleware = async (ctx, next) => {
       // If response is already set, no need to run the original method
       if (typeof ctx.response === 'undefined') {
-        ctx.response = await originalMethod(...args);
+        ctx.response = await originalMethod.call(this, ...args);
       }
 
       next();
